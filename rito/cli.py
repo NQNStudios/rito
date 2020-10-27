@@ -8,7 +8,7 @@ def sender_options(function):
     print(senders_module_path)
     sender_names = [module_info.name for module_info in pkgutil.iter_modules([senders_module_path])]
     for sender in sender_names:
-        function = click.option('--{}'.format(sender), default=None, help='{} recipients to message, comma-separated without spaces')(function)
+        function = click.option('--{}'.format(sender), default=None, help='{} recipients to message, comma-separated without spaces'.format(sender))(function)
     return function
 
 @click.command()
