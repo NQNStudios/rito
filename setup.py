@@ -20,6 +20,11 @@ setuptools.setup(
     ],
     python_requires='>=3.6',
     install_requires=[
-        'requests'
-    ]
+        'requests',
+        'click'
+    ],
+    entry_points='''
+        [console_scripts]
+        rito=rito.cli:cli
+    ''',
 )
