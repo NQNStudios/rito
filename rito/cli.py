@@ -1,16 +1,24 @@
 import click
+import pkgutil
+import importlib
+
+def sender_options(function):
+    sender_names = [module_info.name for module_info in pkgutil.iter_modules(['rito/senders'])]
+    for sender in sender_names:
+        function = click.option('--{}'.format(sender), default=None, help='{} recipients to message, comma-separated without spaces')(function)
+    return function
 
 @click.command()
-@click.option('--slack', default=None, help='Slack channels to message, comma-separated without spaces')
+@sender_options
 @click.argument('message')
-def cli(slack, message):
+def cli(message, **kwargs):
     # Make a matrix of Rito modules to the list of recipients they should send to
     message_matrix = {}
     
-    if slack != None:
-        from . import slack as slack_module
-        slack_channels_to_message=slack.split(",")
-        message_matrix[slack_module] = slack_channels_to_message
+    for sender_arg, recipients_arg in kwargs.items():
+        sender_module = importlib.import_module('rito.senders.{}'.format(sender_arg))
+        recipients=recipients_arg.split(",")
+        message_matrix[sender_module] = recipients
 
     if len(message_matrix) == 0:
         print("Your rito command wouldn't send any messages. Check your arguments")
