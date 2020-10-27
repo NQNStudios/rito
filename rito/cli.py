@@ -1,9 +1,12 @@
 import click
 import pkgutil
 import importlib
+import os
 
 def sender_options(function):
-    sender_names = [module_info.name for module_info in pkgutil.iter_modules(['rito/senders'])]
+    senders_module_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'senders')
+    print(senders_module_path)
+    sender_names = [module_info.name for module_info in pkgutil.iter_modules([senders_module_path])]
     for sender in sender_names:
         function = click.option('--{}'.format(sender), default=None, help='{} recipients to message, comma-separated without spaces')(function)
     return function
