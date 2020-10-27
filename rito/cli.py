@@ -16,6 +16,8 @@ def cli(message, **kwargs):
     message_matrix = {}
     
     for sender_arg, recipients_arg in kwargs.items():
+        if recipients_arg == None:
+            continue
         sender_module = importlib.import_module('rito.senders.{}'.format(sender_arg))
         recipients=recipients_arg.split(",")
         message_matrix[sender_module] = recipients

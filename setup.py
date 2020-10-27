@@ -21,7 +21,8 @@ setuptools.setup(
     python_requires='>=3.6',
     install_requires=[
         'requests',
-        'click'
+        'click',
+        'markdown'
     ],
     entry_points='''
         [console_scripts]
