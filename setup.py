@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="example-pkg-nqnstudios",
+    name="rito-nqnstudios",
     version="0.0.1",
     author="Nat Quayle Nelson",
     author_email="natquaylenelson@gmail.com",
