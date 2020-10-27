@@ -10,7 +10,7 @@ if 'RITO_SLACK_TOKEN' not in os.environ:
 
 auth_token = os.environ['RITO_SLACK_TOKEN']
 
-def send_slack_message(channel, text):
+def send_message(channel, text):
     payload = {
         "channel": channel,
         "text": text,
