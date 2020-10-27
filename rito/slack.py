@@ -22,4 +22,6 @@ def send_message(channel, text):
     }
 
     resp = requests.post("https://slack.com/api/chat.postMessage", data=json.dumps(payload), headers=headers)
-    print(resp.text)
+    resp = json.loads(resp.text)
+    if not resp["ok"]:
+        raise Exception(resp["error"])
