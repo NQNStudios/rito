@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="rito",
-    version="0.0.1",
+    version="0.0.2",
     author="Nat Quayle Nelson",
     author_email="natquaylenelson@gmail.com",
     description="Very simple ways to send notifications",
