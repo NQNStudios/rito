@@ -1,8 +1,6 @@
 import requests
 import json
 import os
-import code
-import cv2
 
 if 'RITO_SLACK_TOKEN' not in os.environ:
     print("To use Rito's slack functions, first create a Slack app on your workspace following these instructions: https://api.slack.com/messaging/sending#getting_started")
@@ -12,28 +10,8 @@ if 'RITO_SLACK_TOKEN' not in os.environ:
 
 auth_token = os.environ['RITO_SLACK_TOKEN']
 
-# Instead of a string containing a message, the slack_image sender expects a string containing an image filename
+# Instead of a string containing a message, the slack_file sender expects a string containing a filename
 def send_message(channel, filename):
-    # According to https://slack.com/intl/en-gb/help/articles/201330736-Add-files-to-Slack
-    # "the preview will only display inline if it's smaller than 11,000 pixels on the longest side,
-    # or less than 45 million pixels total."
-    side_limit = 11000
-    total_limit = 45000000
-    image = cv2.imread(filename)
-
-    height = image.shape[0]
-    width = image.shape[1]
-    pixels_total = height * width
-
-    if pixels_total >= total_limit or height >= side_limit or width >= side_limit:
-        new_size = (int(width/2), int(height/2))
-        new_image = cv2.resize(image, new_size)
-        base_filename, ext = os.path.splitext(filename)
-        new_filename = base_filename + '-small' + ext
-        cv2.imwrite(new_filename, new_image)
-        send_message(channel, new_filename)
-        return
-
     payload = {
         "channels": channel
     }
