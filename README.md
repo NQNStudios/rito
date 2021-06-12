@@ -1,4 +1,4 @@
 # rito
-Very simple ways to send notifications
+Simple command-line script-friendly ways to send notifications
 
 TODO write about the module conventions
