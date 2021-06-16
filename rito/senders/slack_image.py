@@ -3,11 +3,13 @@ import json
 import os
 import code
 import cv2
+from . import slack
 
 if 'RITO_SLACK_TOKEN' not in os.environ:
     print("To use Rito's slack functions, first create a Slack app on your workspace following these instructions: https://api.slack.com/messaging/sending#getting_started")
     print("Your app needs the permissions channel:read, chat:write, and chat:write.public")
     print("After creating the app and installing it to your workspace, copy its auth token into an environment variable called RITO_SLACK_TOKEN")
+    print("For very large images, set the environment variable OPENCV_IO_MAX_IMAGE_PIXELS to a sensible value.")
     exit(1)
 
 auth_token = os.environ['RITO_SLACK_TOKEN']
@@ -19,7 +21,13 @@ def send_message(channel, filename):
     # or less than 45 million pixels total."
     side_limit = 11000
     total_limit = 45000000
-    image = cv2.imread(filename)
+
+    try:
+        image = cv2.imread(filename)
+    except:
+        # Image is too large for OPENCV_IO_MAX_IMAGE_PIXELS
+        slack.send_message(channel, "Failed to send {} because it is too large. To fix this, set the environment variable OPENCV_IO_MAX_IMAGE_PIXELS to a sensible value.".format(filename))
+        return
 
     height = image.shape[0]
     width = image.shape[1]
