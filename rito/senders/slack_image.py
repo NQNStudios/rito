@@ -29,12 +29,17 @@ def send_message(channel, filename):
         slack.send_message(channel, "Failed to send {} because it is too large. To fix this, set the environment variable OPENCV_IO_MAX_IMAGE_PIXELS to a sensible value.".format(filename))
         return
 
-    height = image.shape[0]
-    width = image.shape[1]
+    original_height = height = image.shape[0]
+    original_width = width = image.shape[1]
     pixels_total = height * width
 
-    if pixels_total >= total_limit or height >= side_limit or width >= side_limit:
-        new_size = (int(width/2), int(height/2))
+    while pixels_total >= total_limit or height >= side_limit or width >= side_limit:
+        height = height/2
+        width = width/2
+        pixels_total = height * width
+
+    if height != original_height:
+        new_size = (int(width), int(height))
         new_image = cv2.resize(image, new_size)
         base_filename, ext = os.path.splitext(filename)
         new_filename = base_filename + '-small' + ext
