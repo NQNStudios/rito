@@ -28,5 +28,6 @@ setuptools.setup(
     entry_points='''
         [console_scripts]
         rito=rito.cli:cli
+        rito-get=rito.get_cli:get_cli
     ''',
 )
