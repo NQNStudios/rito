@@ -18,7 +18,7 @@ def send_message(channel, text):
 
     headers = {
         "Content-Type": "application/json; charset=utf-8",
-        "Authorization": "Bearer {}".format(auth_token)
+        "Authorization": f"Bearer {auth_token}"
     }
 
     resp = requests.post("https://slack.com/api/chat.postMessage", data=json.dumps(payload), headers=headers)

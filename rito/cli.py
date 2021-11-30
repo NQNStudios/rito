@@ -7,7 +7,7 @@ def sender_options(function):
     senders_module_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'senders')
     sender_names = [module_info.name for module_info in pkgutil.iter_modules([senders_module_path])]
     for sender in sender_names:
-        function = click.option('--{}'.format(sender), default=None, help='{} recipients to message, comma-separated without spaces'.format(sender))(function)
+        function = click.option(f'--{sender}', default=None, help=f'{sender} recipients to message, comma-separated without spaces')(function)
     return function
 
 @click.command()
@@ -20,7 +20,7 @@ def cli(message, **kwargs):
     for sender_arg, recipients_arg in kwargs.items():
         if recipients_arg == None:
             continue
-        sender_module = importlib.import_module('rito.senders.{}'.format(sender_arg))
+        sender_module = importlib.import_module(f'rito.senders.{sender_arg}')
         recipients=recipients_arg.split(",")
         message_matrix[sender_module] = recipients
 

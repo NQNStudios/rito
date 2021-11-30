@@ -26,7 +26,7 @@ def send_message(channel, filename):
         image = cv2.imread(filename)
     except:
         # Image is too large for OPENCV_IO_MAX_IMAGE_PIXELS
-        slack.send_message(channel, "Failed to send {} because it is too large. To fix this, set the environment variable OPENCV_IO_MAX_IMAGE_PIXELS to a sensible value.".format(filename))
+        slack.send_message(channel, f"Failed to send {filename} because it is too large. To fix this, set the environment variable OPENCV_IO_MAX_IMAGE_PIXELS to a sensible value.")
         return
 
     original_height = height = image.shape[0]
@@ -52,7 +52,7 @@ def send_message(channel, filename):
     }
 
     headers = {
-        "Authorization": "Bearer {}".format(auth_token)
+        "Authorization": f"Bearer {auth_token}"
     }
 
     files = {

@@ -17,7 +17,7 @@ def send_message(channel, filename):
     }
 
     headers = {
-        "Authorization": "Bearer {}".format(auth_token)
+        "Authorization": f"Bearer {auth_token}"
     }
 
     files = {

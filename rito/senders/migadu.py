@@ -65,9 +65,9 @@ def __send_email(recipients, subject, content, encoding, files=[]):
                         Name=basename(f),
                     )
                 # After the file is closed
-                part['Content-Disposition'] = 'attachment; filename="{}"'.format(basename(f))
+                part['Content-Disposition'] = f'attachment; filename="{basename(f)}"'
                 message.attach(part)
             except:
-                raise "Couldn't attach {}.".format(f)
+                raise f"Couldn't attach {f}."
 
     __with_smtp(lambda smtp : smtp.sendmail(account, recipients,message.as_string()))
