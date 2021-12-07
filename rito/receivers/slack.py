@@ -1,6 +1,7 @@
 import requests
 import json
 import os
+import re
 
 if 'RITO_SLACK_TOKEN' not in os.environ:
     print("To use Rito's slack functions, first create a Slack app on your workspace following these instructions: https://api.slack.com/messaging/sending#getting_started")
@@ -9,23 +10,47 @@ if 'RITO_SLACK_TOKEN' not in os.environ:
     exit(1)
 
 auth_token = os.environ['RITO_SLACK_TOKEN']
+recent_messages_to_check = os.environ['RITO_SLACK_HISTORY'] if 'RITO_SLACK_HISTORY' in os.environ else 10
 
-check_interval = 60
+check_interval = 5
 
-def get_message(channel, pattern, timeout):
-    return input(pattern)
+def get_message(channel, pattern):
+    headers = {
+        "Content-Type": "application/json; charset=utf-8",
+        "Authorization": f"Bearer {auth_token}"
+    }
 
-    # payload = {
-    #     "channel": channel,
-    #     "text": text,
-    # }
+    resp = requests.get("https://slack.com/api/conversations.list", headers=headers)
+    resp = json.loads(resp.text)
+    if not resp["ok"]:
+        raise Exception(resp["error"])
 
-    # headers = {
-    #     "Content-Type": "application/json; charset=utf-8",
-    #     "Authorization": f"Bearer {auth_token}"
-    # }
+    channels = resp["channels"]
 
-    # resp = requests.post("https://slack.com/api/chat.postMessage", data=json.dumps(payload), headers=headers)
-    # resp = json.loads(resp.text)
-    # if not resp["ok"]:
-    #     raise Exception(resp["error"])
+    id = ""
+    for _channel in channels:
+        if _channel["name"] == channel:
+            id = _channel["id"]
+    
+    if len(id) == 0:
+        raise Exception(f"Channel {channel} not available to Rito")
+    
+    payload = {
+        "channel": id,
+    }
+
+    resp = requests.get("https://slack.com/api/conversations.history", headers=headers, params=payload)
+    resp = json.loads(resp.text)
+    if not resp["ok"]:
+        raise Exception(resp["error"])
+    
+    messages = resp["messages"]
+    
+    # Search backwards for the pattern:
+    pattern = re.compile(pattern)
+    for idx in range(recent_messages_to_check):
+        message = messages[idx]['text']
+        if pattern.search(message) != None:
+            return message
+
+    return ""

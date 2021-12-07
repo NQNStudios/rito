@@ -40,7 +40,7 @@ def get_cli(pattern, **kwargs):
         for module, sources in message_matrix.items():
             if t % module.check_interval == 0:
                 for source in sources:
-                    m = module.get_message(source, pattern, timeout)
+                    m = module.get_message(source, pattern)
                     if m != None and len(m) > 0:
                         print(m)
                         sys.exit(0)
