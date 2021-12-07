@@ -4,7 +4,7 @@ import os
 
 if 'RITO_SLACK_TOKEN' not in os.environ:
     print("To use Rito's slack functions, first create a Slack app on your workspace following these instructions: https://api.slack.com/messaging/sending#getting_started")
-    print("Your app needs the permissions channel:read, chat:write, and chat:write.public")
+    print("Your app needs the permissions channels:read, channels:history, chat:write, files:write, and chat:write.public")
     print("After creating the app and installing it to your workspace, copy its auth token into an environment variable called RITO_SLACK_TOKEN")
     exit(1)
 
