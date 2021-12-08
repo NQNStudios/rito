@@ -12,7 +12,7 @@ if 'RITO_SLACK_TOKEN' not in os.environ:
 auth_token = os.environ['RITO_SLACK_TOKEN']
 recent_messages_to_check = os.environ['RITO_SLACK_HISTORY'] if 'RITO_SLACK_HISTORY' in os.environ else 10
 
-check_interval = 5
+check_interval = 30
 
 def get_message(channel, pattern):
     headers = {
