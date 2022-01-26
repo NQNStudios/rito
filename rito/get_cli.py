@@ -15,15 +15,21 @@ def receiver_options(function):
 @click.command()
 @receiver_options
 @click.option('--timeout', required=True, default=None, help='number of seconds to keep waiting for a message')
+@click.option('--num-checks', required=False, default=None, help='number of times to check for a message')
 @click.argument('pattern')
 def get_cli(pattern, **kwargs):
     # Make a matrix of Rito receiver modules to the list of sources they should receive from
     message_matrix = {}
     
     timeout = None
+    interval = 1
+    num_checks = None
     for receiver_arg, source_arg in kwargs.items():
         if receiver_arg == 'timeout':
             timeout = int(source_arg)
+            continue
+        if receiver_arg == 'num_checks':
+            num_checks = int(source_arg)
             continue
         if source_arg == None:
             continue
@@ -31,12 +37,16 @@ def get_cli(pattern, **kwargs):
         sources=source_arg.split(",")
         message_matrix[receiver_module] = sources
 
+    if num_checks != None:
+        interval = timeout / num_checks
+
     if len(message_matrix) == 0:
         print("Your rito-get command wouldn't receive any messages. Check your arguments")
         exit(1)
     
     # Manage the timeout/retry loop for receivers
-    for t in range(timeout):
+    t = 0
+    while t < timeout:
         for module, sources in message_matrix.items():
             if t % module.check_interval == 0:
                 for source in sources:
@@ -44,6 +54,7 @@ def get_cli(pattern, **kwargs):
                     if m != None and len(m) > 0:
                         print(m)
                         sys.exit(0)
-        time.sleep(1)
+        t += interval
+        time.sleep(interval)
     sys.stderr.write(f"rito-get timeout after {timeout}.{os.linesep}")
     sys.exit(1)
